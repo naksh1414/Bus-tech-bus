@@ -61,6 +61,10 @@ export class BusService {
   async getAvailableBuses(): Promise<IBus[]> {
     return this.busRepository.findAvailableBuses();
   }
+
+  async getAllBuses(): Promise<IBus[]> {
+    return this.busRepository.findAllBuses();
+  }
   
   async getBusById(id: string): Promise<IBus | null> {
     return this.busRepository.getBusById(id);

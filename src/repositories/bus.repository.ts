@@ -1,4 +1,4 @@
-import { Bus, IBus } from '../models/bus.model';
+import { Bus, IBus } from "../models/bus.model";
 
 export class BusRepository {
   async createBus(busData: Partial<IBus>): Promise<IBus> {
@@ -19,25 +19,34 @@ export class BusRepository {
 
   async findAvailableBuses(): Promise<IBus[]> {
     return Bus.find({
-      status: { $in: ['AVAILABLE', 'PARTIALLY_OCCUPIED'] }
+      status: { $in: ["AVAILABLE", "PARTIALLY_OCCUPIED"] },
     });
   }
 
-  async updateBusOccupancy(id: string, occupancy: number): Promise<IBus | null> {
-    const bus = await this.getBusById(id);
-    if (!bus) throw new Error('Bus not found');
+  async findAllBuses(): Promise<IBus[]> {
+    return Bus.find({});
+  }
 
-    const newStatus = 
-      occupancy === 0 ? 'available' :
-      occupancy === bus.capacity ? 'fully_occupied' : 
-      'partially_occupied';
+  async updateBusOccupancy(
+    id: string,
+    occupancy: number
+  ): Promise<IBus | null> {
+    const bus = await this.getBusById(id);
+    if (!bus) throw new Error("Bus not found");
+
+    const newStatus =
+      occupancy === 0
+        ? "available"
+        : occupancy === bus.capacity
+        ? "fully_occupied"
+        : "partially_occupied";
 
     return Bus.findByIdAndUpdate(
-      id, 
-      { 
+      id,
+      {
         currentOccupancy: occupancy,
-        status: newStatus 
-      }, 
+        status: newStatus,
+      },
       { new: true }
     );
   }

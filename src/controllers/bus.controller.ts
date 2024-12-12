@@ -29,6 +29,16 @@ export class BusController {
     }
   }
 
+  async getAllBuses(req: Request, res: Response): Promise<void> {
+    try {
+      const buses = await this.busService.getAllBuses();
+      res.status(200).json(buses);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Failed to retrieve available buses' });
+    }
+  }
+
   async updateBusRoute(req: Request, res: Response): Promise<void> {
     try {
       const { busId, routeId } = req.body;
