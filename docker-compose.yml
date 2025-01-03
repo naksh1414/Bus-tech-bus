@@ -11,11 +11,8 @@ services:
       - NODE_ENV=production
       - PORT=8008
       - MONGODB_URI=mongodb+srv://nakshatramanglik14:naksh1414@cluster0.3lrl1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
-      - KAFKA_BROKER=kafka:9092
     depends_on:
       - mongodb
-      - kafka
-      - zookeeper
     networks:
       - bus-network
     restart: unless-stopped
@@ -29,37 +26,8 @@ services:
     networks:
       - bus-network
 
-  zookeeper:
-    image: confluentinc/cp-zookeeper:latest
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
-    ports:
-      - "2181:2181"
-    networks:
-      - bus-network
-
-  kafka:
-    image: confluentinc/cp-kafka:latest
-    depends_on:
-      - zookeeper
-    ports:
-      - "9092:9092"
-    environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-    networks:
-      - bus-network
-    volumes:
-      - kafka_data:/var/lib/kafka/data
-
 volumes:
   mongodb_data:
-  kafka_data:
 
 networks:
   bus-network:

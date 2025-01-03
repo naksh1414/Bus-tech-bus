@@ -19,7 +19,6 @@ COPY . .
 # Set environment variables
 ENV NODE_ENV=development
 ENV PORT=8008
-ENV KAFKA_BROKER=kafka:9092
 
 # Expose port
 EXPOSE 8008
