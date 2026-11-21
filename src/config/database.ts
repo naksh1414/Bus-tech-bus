@@ -4,8 +4,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const MONGODB_URI =
-  process.env.MONGODB_URI ||
-  "mongodb+srv://nakshatramanglik14:naksh1414@cluster0.3lrl1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+  process.env.MONGODB_URI || "mongodb://localhost:27017/bus_service";
 
 export const connectDatabase = async () => {
   try {
