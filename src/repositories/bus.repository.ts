@@ -1,4 +1,5 @@
 import { Bus, IBus } from "../models/bus.model";
+import { statusForOccupancy } from "../utils/occupancy";
 
 export class BusRepository {
   async createBus(busData: Partial<IBus>): Promise<IBus> {
@@ -34,12 +35,7 @@ export class BusRepository {
     const bus = await this.getBusById(id);
     if (!bus) throw new Error("Bus not found");
 
-    const newStatus =
-      occupancy === 0
-        ? "available"
-        : occupancy === bus.capacity
-        ? "fully_occupied"
-        : "partially_occupied";
+    const newStatus = statusForOccupancy(occupancy, bus.capacity);
 
     return Bus.findByIdAndUpdate(
       id,
@@ -47,7 +43,7 @@ export class BusRepository {
         currentOccupancy: occupancy,
         status: newStatus,
       },
-      { new: true }
+      { new: true, runValidators: true }
     );
   }
 }

@@ -8,14 +8,26 @@ and route assignment.
 ![Express](https://img.shields.io/badge/Express-4-black)
 ![MongoDB](https://img.shields.io/badge/MongoDB-Mongoose%208-green)
 ![Docker](https://img.shields.io/badge/Docker-compose-2496ED)
+[![CI](https://github.com/naksh1414/Bus-tech-bus/actions/workflows/ci.yml/badge.svg)](https://github.com/naksh1414/Bus-tech-bus/actions/workflows/ci.yml)
 
 ## Part of the Bus Tech platform
+
+```mermaid
+flowchart LR
+    A["Admin dashboard<br/>(Next.js)"] --> B["Bus service<br/>(this repo)"]
+    A --> S[Seat service]
+    A --> U["User service<br/>(auth, JWT)"]
+    B --> DB[(MongoDB)]
+    S --> DB
+    U --> DB
+    B -. events .-> K[[Kafka]]
+```
 
 | Repository | Role |
 | --- | --- |
 | **Bus-tech-bus** (this repo) | Bus fleet, capacity and route assignment |
 | [Bus-tech-seat](https://github.com/naksh1414/Bus-tech-seat) | Seat allocation |
-| [Bus-tech-user](https://github.com/naksh1414/Bus-tech-user) | User-facing service |
+| [Bus-tech-user](https://github.com/naksh1414/Bus-tech-user) | Users, authentication and roles |
 | [Bus-tech-Admin](https://github.com/naksh1414/Bus-tech-Admin) | Admin dashboard |
 
 ## API
@@ -29,7 +41,9 @@ and route assignment.
 | `PATCH` | `/buses/route` | Assign or change a bus's route |
 
 A bus tracks `busNumber`, `capacity`, `currentOccupancy`, `currentRoute` and a `status` of
-`AVAILABLE`, `PARTIALLY_OCCUPIED` or `FULLY_OCCUPIED`.
+`AVAILABLE`, `PARTIALLY_OCCUPIED` or `FULLY_OCCUPIED`. The status is derived from occupancy
+by [`statusForOccupancy`](src/utils/occupancy.ts), which also rejects occupancy that is
+negative or above the bus's capacity.
 
 ## Structure
 
@@ -66,6 +80,15 @@ npm run dev
 ```
 
 The service listens on `http://localhost:8008`.
+
+## Tests
+
+```bash
+npm test        # unit tests (Node test runner + ts-node)
+npm run typecheck
+```
+
+Tests run on every push via GitHub Actions.
 
 ## Configuration
 
